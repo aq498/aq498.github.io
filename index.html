@@ -1152,7 +1152,15 @@
 
             function addMessageToChat(text, sender) {
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('message-bubble', sender);
+                messageElement.classList.add('message-bubble'); // 'message-bubble' is always a base class
+
+                // FIX: Split the sender string by spaces and add each part as a separate class
+                sender.split(' ').forEach(cls => {
+                    if (cls) { // Ensure no empty strings are added as classes
+                        messageElement.classList.add(cls);
+                    }
+                });
+                
                 messageElement.textContent = text;
                 chatMessagesDiv.appendChild(messageElement);
                 chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll to latest message
