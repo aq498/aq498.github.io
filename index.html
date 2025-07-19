@@ -1117,6 +1117,8 @@
                         // max_tokens: 150,
                     };
 
+                    console.log('Sending chat message to DeepSeek API:', payload); // Debugging log
+
                     const response = await fetch(DEEPSEEK_API_URL, {
                         method: 'POST',
                         headers: {
@@ -1127,6 +1129,7 @@
                     });
 
                     const result = await response.json();
+                    console.log('DeepSeek API chat response:', result); // Debugging log
 
                     if (result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
@@ -1139,7 +1142,7 @@
                     } else {
                         loadingMessageElement.textContent = "Sorry, I couldn't generate a response. Please try again.";
                         loadingMessageElement.classList.remove('loading');
-                        console.error("DeepSeek API response structure unexpected:", result);
+                        console.error("DeepSeek API response structure unexpected for chat:", result);
                     }
                 } catch (error) {
                     loadingMessageElement.textContent = "An error occurred. Please try again later.";
@@ -1178,6 +1181,7 @@
             // --- Survey Form Logic ---
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
+                console.log('Form submitted.'); // Debugging log
 
                 // Reset previous messages and styling
                 ageError.classList.add('hidden');
@@ -1251,6 +1255,8 @@
                     responses[qName] = value;
                 });
 
+                console.log('Validation status:', isValid); // Debugging log
+
                 if (!isValid) {
                     validationMessage.classList.remove('hidden');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1259,6 +1265,8 @@
 
                 form.classList.add('hidden');
                 surveyResultsDiv.classList.remove('hidden');
+                console.log('Displaying survey results section.'); // Debugging log
+
 
                 // Scroll to the top of the results section immediately after showing it
                 surveyResultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1274,6 +1282,8 @@
                 // Display decision tree prediction at the top
                 decisionOutputBox.textContent = `Decision Tree Prediction: ${lastPredictionResult}`;
                 decisionOutputBox.classList.remove('hidden');
+                console.log('Decision output box unhidden and content set.'); // Debugging log
+
 
                 // Apply highlight class to analysis box
                 detailedAnalysisBox.classList.remove('green-highlight', 'orange-highlight', 'red-highlight');
@@ -1324,6 +1334,8 @@
                 });
 
                 detailedAnalysisBox.classList.remove('hidden'); // Make sure analysis box is visible
+                console.log('Detailed analysis box unhidden and content set.'); // Debugging log
+
 
                 console.log('Survey Responses:', lastSurveyResponses);
                 console.log('Simulated Prediction:', lastPredictionResult);
@@ -1377,6 +1389,8 @@
                         messages: messages
                     };
 
+                    console.log('Sending advice request to DeepSeek API:', payload); // Debugging log
+
                     const response = await fetch(DEEPSEEK_API_URL, {
                         method: 'POST',
                         headers: {
@@ -1387,6 +1401,7 @@
                     });
 
                     const result = await response.json();
+                    console.log('DeepSeek API advice response:', result); // Debugging log
 
                     if (result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
@@ -1396,12 +1411,12 @@
                     } else {
                         llmAdviceContent.textContent = "Sorry, I couldn't generate advice at this time. Please try again.";
                         llmAdviceBox.classList.remove('hidden');
-                        console.error("DeepSeek API response structure unexpected:", result);
+                        console.error("DeepSeek API response structure unexpected for advice:", result);
                     }
                 } catch (error) {
                     llmAdviceContent.textContent = "An error occurred while fetching advice. Please try again later.";
                     llmAdviceBox.classList.remove('hidden');
-                    console.error("Error calling DeepSeek API:", error);
+                    console.error("Error calling DeepSeek API for advice:", error);
                 } finally {
                     deepSeekAdviceButtonText.classList.remove('hidden');
                     deepSeekAdviceSpinner.classList.add('hidden');
@@ -1430,6 +1445,8 @@
                         messages: messages
                     };
 
+                    console.log('Sending journal prompt request to DeepSeek API:', payload); // Debugging log
+
                     const response = await fetch(DEEPSEEK_API_URL, {
                         method: 'POST',
                         headers: {
@@ -1440,6 +1457,7 @@
                     });
 
                     const result = await response.json();
+                    console.log('DeepSeek API journal prompt response:', result); // Debugging log
 
                     if (result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
@@ -1483,6 +1501,8 @@
                         messages: messages
                     };
 
+                    console.log('Sending affirmation request to DeepSeek API:', payload); // Debugging log
+
                     const response = await fetch(DEEPSEEK_API_URL, {
                         method: 'POST',
                         headers: {
@@ -1493,6 +1513,7 @@
                     });
 
                     const result = await response.json();
+                    console.log('DeepSeek API affirmation response:', result); // Debugging log
 
                     if (result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
@@ -1502,12 +1523,12 @@
                     } else {
                         positiveAffirmationContent.textContent = "Sorry, I couldn't generate a positive affirmation at this time. Please try again.";
                         positiveAffirmationBox.classList.remove('hidden');
-                        console.error("DeepSeek API response structure unexpected for positive affirmation:", result);
+                        console.error("DeepSeek API response structure unexpected for affirmation:", result);
                     }
                 } catch (error) {
                     positiveAffirmationContent.textContent = "An error occurred while fetching the positive affirmation. Please try again later.";
                     positiveAffirmationBox.classList.remove('hidden');
-                    console.error("Error calling DeepSeek API for positive affirmation:", error);
+                    console.error("Error calling DeepSeek API for affirmation:", error);
                 } finally {
                     positiveAffirmationButtonText.classList.remove('hidden');
                     positiveAffirmationSpinner.classList.add('hidden');
@@ -1581,3 +1602,4 @@
     </script>
 </body>
 </html>
+
