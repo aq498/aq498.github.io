@@ -17,6 +17,7 @@
             min-height: 100vh; /* Ensure body takes full height */
             padding: 1rem; /* General padding around content */
             position: relative;
+            flex-direction: column; /* Allow content to stack vertically */
         }
         /* AppSheet-like blue for accents */
         .appsheet-blue {
@@ -69,6 +70,39 @@
             box-shadow: inset 0 0 0 3px #fff; /* White inner circle */
         }
 
+        /* Green for positive/good answers */
+        input[type="radio"].green-option:checked + label {
+            background-color: #dcfce7; /* bg-green-100 */
+            border-color: #22c55e; /* border-green-500 */
+            color: #166534; /* text-green-800 */
+        }
+        input[type="radio"].green-option:checked + label::before {
+            background-color: #22c55e; /* bg-green-500 */
+            border-color: #22c55e;
+        }
+
+        /* Orange for neutral/sometimes answers */
+        input[type="radio"].orange-option:checked + label {
+            background-color: #fff7ed; /* bg-orange-100 */
+            border-color: #f97316; /* border-orange-500 */
+            color: #9a3412; /* text-orange-800 */
+        }
+        input[type="radio"].orange-option:checked + label::before {
+            background-color: #f97316; /* bg-orange-500 */
+            border-color: #f97316;
+        }
+
+        /* Red for negative/concerning answers */
+        input[type="radio"].red-option:checked + label {
+            background-color: #fee2e2; /* bg-red-100 */
+            border-color: #ef4444; /* border-red-500 */
+            color: #991b1b; /* text-red-800 */
+        }
+        input[type="radio"].red-option:checked + label::before {
+            background-color: #ef4444; /* bg-red-500 */
+            border-color: #ef4444;
+        }
+
         /* Style for the decision tree output box */
         .decision-output-box {
             background-color: #4285F4; /* AppSheet blue */
@@ -107,12 +141,6 @@
         }
         .llm-advice-box li { /* Added style for list items in LLM boxes */
             margin-bottom: 0.5rem;
-        }
-        .llm-advice-box .disclaimer {
-            font-size: 0.75rem;
-            color: #6b7280; /* Gray text for disclaimer */
-            margin-top: 1rem;
-            font-style: italic;
         }
         /* Loading spinner */
         .spinner {
@@ -333,6 +361,25 @@
             font-style: italic;
             color: #6b7280;
         }
+        /* Consolidated Disclaimer */
+        #globalDisclaimer {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #fef2f2; /* bg-red-50 */
+            border: 1px solid #f87171; /* border-red-400 */
+            color: #b91c1c; /* text-red-700 */
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            text-align: center;
+            max-width: 800px; /* Limit width for readability */
+            width: 100%;
+        }
+        #globalDisclaimer p {
+            margin-bottom: 0.5rem;
+        }
+        #globalDisclaimer p:last-child {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4 relative">
@@ -424,9 +471,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Are you satisfied with your life?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="SatisfiedLifeYes" name="SatisfiedLife" value="Yes" required>
+                        <input type="radio" id="SatisfiedLifeYes" name="SatisfiedLife" value="Yes" required class="green-option">
                         <label for="SatisfiedLifeYes">Yes</label>
-                        <input type="radio" id="SatisfiedLifeNo" name="SatisfiedLife" value="No">
+                        <input type="radio" id="SatisfiedLifeNo" name="SatisfiedLife" value="No" class="red-option">
                         <label for="SatisfiedLifeNo">No</label>
                     </div>
                 </div>
@@ -434,9 +481,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Have you dropped activities you used to enjoy?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="DroppedActivitiesYes" name="DroppedActivities" value="Yes" required>
+                        <input type="radio" id="DroppedActivitiesYes" name="DroppedActivities" value="Yes" required class="red-option">
                         <label for="DroppedActivitiesYes">Yes</label>
-                        <input type="radio" id="DroppedActivitiesNo" name="DroppedActivities" value="No">
+                        <input type="radio" id="DroppedActivitiesNo" name="DroppedActivities" value="No" class="green-option">
                         <label for="DroppedActivitiesNo">No</label>
                     </div>
                 </div>
@@ -444,9 +491,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel your life is empty?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="FeelLifeEmptyYes" name="FeelLifeEmpty" value="Yes" required>
+                        <input type="radio" id="FeelLifeEmptyYes" name="FeelLifeEmpty" value="Yes" required class="red-option">
                         <label for="FeelLifeEmptyYes">Yes</label>
-                        <input type="radio" id="FeelLifeEmptyNo" name="FeelLifeEmpty" value="No">
+                        <input type="radio" id="FeelLifeEmptyNo" name="FeelLifeEmpty" value="No" class="green-option">
                         <label for="FeelLifeEmptyNo">No</label>
                     </div>
                 </div>
@@ -454,9 +501,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you often feel bored?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="BoredYes" name="Bored" value="Yes" required>
+                        <input type="radio" id="BoredYes" name="Bored" value="Yes" required class="red-option">
                         <label for="BoredYes">Yes</label>
-                        <input type="radio" id="BoredNo" name="Bored" value="No">
+                        <input type="radio" id="BoredNo" name="Bored" value="No" class="green-option">
                         <label for="BoredNo">No</label>
                     </div>
                 </div>
@@ -464,9 +511,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel helpless?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="FeelHelplessYes" name="FeelHelpless" value="Yes" required>
+                        <input type="radio" id="FeelHelplessYes" name="FeelHelpless" value="Yes" required class="red-option">
                         <label for="FeelHelplessYes">Yes</label>
-                        <input type="radio" id="FeelHelplessNo" name="FeelHelpless" value="No">
+                        <input type="radio" id="FeelHelplessNo" name="FeelHelpless" value="No" class="green-option">
                         <label for="FeelHelplessNo">No</label>
                     </div>
                 </div>
@@ -474,9 +521,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Are you afraid that something bad will happen to you?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="AfraidBadHappeningYes" name="AfraidBadHappening" value="Yes" required>
+                        <input type="radio" id="AfraidBadHappeningYes" name="AfraidBadHappening" value="Yes" required class="red-option">
                         <label for="AfraidBadHappeningYes">Yes</label>
-                        <input type="radio" id="AfraidBadHappeningNo" name="AfraidBadHappening" value="No">
+                        <input type="radio" id="AfraidBadHappeningNo" name="AfraidBadHappening" value="No" class="green-option">
                         <label for="AfraidBadHappeningNo">No</label>
                     </div>
                 </div>
@@ -484,9 +531,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Are you hopeful about the future?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="HopefulAboutFutureYes" name="HopefulAboutFuture" value="Yes" required>
+                        <input type="radio" id="HopefulAboutFutureYes" name="HopefulAboutFuture" value="Yes" required class="green-option">
                         <label for="HopefulAboutFutureYes">Yes</label>
-                        <input type="radio" id="HopefulAboutFutureNo" name="HopefulAboutFuture" value="No">
+                        <input type="radio" id="HopefulAboutFutureNo" name="HopefulAboutFuture" value="No" class="red-option">
                         <label for="HopefulAboutFutureNo">No</label>
                     </div>
                 </div>
@@ -494,9 +541,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you spend time happily?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="SpendTimeHappilyYes" name="SpendTimeHappily" value="Yes" required>
+                        <input type="radio" id="SpendTimeHappilyYes" name="SpendTimeHappily" value="Yes" required class="green-option">
                         <label for="SpendTimeHappilyYes">Yes</label>
-                        <input type="radio" id="SpendTimeHappilyNo" name="SpendTimeHappily" value="No">
+                        <input type="radio" id="SpendTimeHappilyNo" name="SpendTimeHappily" value="No" class="red-option">
                         <label for="SpendTimeHappilyNo">No</label>
                     </div>
                 </div>
@@ -504,9 +551,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel full of energy?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="FeelEnergyYes" name="FeelEnergy" value="Yes" required>
+                        <input type="radio" id="FeelEnergyYes" name="FeelEnergy" value="Yes" required class="green-option">
                         <label for="FeelEnergyYes">Yes</label>
-                        <input type="radio" id="FeelEnergyNo" name="FeelEnergy" value="No">
+                        <input type="radio" id="FeelEnergyNo" name="FeelEnergy" value="No" class="red-option">
                         <label for="FeelEnergyNo">No</label>
                     </div>
                 </div>
@@ -514,9 +561,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you prefer to stay home rather than going out and doing new things?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="PreferStayHomeYes" name="PreferStayHome" value="Yes" required>
+                        <input type="radio" id="PreferStayHomeYes" name="PreferStayHome" value="Yes" required class="red-option">
                         <label for="PreferStayHomeYes">Yes</label>
-                        <input type="radio" id="PreferStayHomeNo" name="PreferStayHome" value="No">
+                        <input type="radio" id="PreferStayHomeNo" name="PreferStayHome" value="No" class="green-option">
                         <label for="PreferStayHomeNo">No</label>
                     </div>
                 </div>
@@ -524,9 +571,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you have problems with memory loss?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="MemoryLossYes" name="MemoryLoss" value="Yes" required>
+                        <input type="radio" id="MemoryLossYes" name="MemoryLoss" value="Yes" required class="red-option">
                         <label for="MemoryLossYes">Yes</label>
-                        <input type="radio" id="MemoryLossNo" name="MemoryLoss" value="No">
+                        <input type="radio" id="MemoryLossNo" name="MemoryLoss" value="No" class="green-option">
                         <label for="MemoryLossNo">No</label>
                     </div>
                 </div>
@@ -534,9 +581,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you consider yourself worthless?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="ConsiderWorthlessYes" name="ConsiderWorthless" value="Yes" required>
+                        <input type="radio" id="ConsiderWorthlessYes" name="ConsiderWorthless" value="Yes" required class="red-option">
                         <label for="ConsiderWorthlessYes">Yes</label>
-                        <input type="radio" id="ConsiderWorthlessNo" name="ConsiderWorthless" value="No">
+                        <input type="radio" id="ConsiderWorthlessNo" name="ConsiderWorthless" value="No" class="green-option">
                         <label for="ConsiderWorthlessNo">No</label>
                     </div>
                 </div>
@@ -544,9 +591,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you cry most of the time?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="CryMostOfTheTimeYes" name="CryMostOfTheTime" value="Yes" required>
+                        <input type="radio" id="CryMostOfTheTimeYes" name="CryMostOfTheTime" value="Yes" required class="red-option">
                         <label for="CryMostOfTheTimeYes">Yes</label>
-                        <input type="radio" id="CryMostOfTheTimeNo" name="CryMostOfTheTime" value="No">
+                        <input type="radio" id="CryMostOfTheTimeNo" name="CryMostOfTheTime" value="No" class="green-option">
                         <label for="CryMostOfTheTimeNo">No</label>
                     </div>
                 </div>
@@ -554,9 +601,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Are you feeling reduced appetite and losing weight?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="FeelingReduceAppetiteAndLosingWeightYes" name="FeelingReduceAppetiteAndLosingWeight" value="Yes" required>
+                        <input type="radio" id="FeelingReduceAppetiteAndLosingWeightYes" name="FeelingReduceAppetiteAndLosingWeight" value="Yes" required class="red-option">
                         <label for="FeelingReduceAppetiteAndLosingWeightYes">Yes</label>
-                        <input type="radio" id="FeelingReduceAppetiteAndLosingWeightNo" name="FeelingReduceAppetiteAndLosingWeight" value="No">
+                        <input type="radio" id="FeelingReduceAppetiteAndLosingWeightNo" name="FeelingReduceAppetiteAndLosingWeight" value="No" class="green-option">
                         <label for="FeelingReduceAppetiteAndLosingWeightNo">No</label>
                     </div>
                 </div>
@@ -564,9 +611,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel your situation is hopeless?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="SituationHopelessYes" name="SituationHopeless" value="Yes" required>
+                        <input type="radio" id="SituationHopelessYes" name="SituationHopeless" value="Yes" required class="red-option">
                         <label for="SituationHopelessYes">Yes</label>
-                        <input type="radio" id="SituationHopelessNo" name="SituationHopeless" value="No">
+                        <input type="radio" id="SituationHopelessNo" name="SituationHopeless" value="No" class="green-option">
                         <label for="SituationHopelessNo">No</label>
                     </div>
                 </div>
@@ -574,9 +621,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel others are better than you?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="PeopleBetterThanYouYes" name="PeopleBetterThanYou" value="Yes" required>
+                        <input type="radio" id="PeopleBetterThanYouYes" name="PeopleBetterThanYou" value="Yes" required class="red-option">
                         <label for="PeopleBetterThanYouYes">Yes</label>
-                        <input type="radio" id="PeopleBetterThanYouNo" name="PeopleBetterThanYou" value="No">
+                        <input type="radio" id="PeopleBetterThanYouNo" name="PeopleBetterThanYou" value="No" class="green-option">
                         <label for="PeopleBetterThanYouNo">No</label>
                     </div>
                 </div>
@@ -584,9 +631,9 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel others would be better off if you died?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="OthersWouldBetterYouDiedYes" name="OthersWouldBetterYouDied" value="Yes" required>
+                        <input type="radio" id="OthersWouldBetterYouDiedYes" name="OthersWouldBetterYouDied" value="Yes" required class="red-option">
                         <label for="OthersWouldBetterYouDiedYes">Yes</label>
-                        <input type="radio" id="OthersWouldBetterYouDiedNo" name="OthersWouldBetterYouDied" value="No">
+                        <input type="radio" id="OthersWouldBetterYouDiedNo" name="OthersWouldBetterYouDied" value="No" class="green-option">
                         <label for="OthersWouldBetterYouDiedNo">No</label>
                     </div>
                 </div>
@@ -599,11 +646,11 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Are you avoiding social gatherings?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="AvoidingSocialGatheringsMost" name="AvoidingSocialGatherings" value="Most of the times" required>
+                        <input type="radio" id="AvoidingSocialGatheringsMost" name="AvoidingSocialGatherings" value="Most of the times" required class="red-option">
                         <label for="AvoidingSocialGatheringsMost">Most of the times</label>
-                        <input type="radio" id="AvoidingSocialGatheringsSometimes" name="AvoidingSocialGatherings" value="Sometimes">
+                        <input type="radio" id="AvoidingSocialGatheringsSometimes" name="AvoidingSocialGatherings" value="Sometimes" class="orange-option">
                         <label for="AvoidingSocialGatheringsSometimes">Sometimes</label>
-                        <input type="radio" id="AvoidingSocialGatheringsNot" name="AvoidingSocialGatherings" value="Not at all">
+                        <input type="radio" id="AvoidingSocialGatheringsNot" name="AvoidingSocialGatherings" value="Not at all" class="green-option">
                         <label for="AvoidingSocialGatheringsNot">Not at all</label>
                     </div>
                 </div>
@@ -611,11 +658,11 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you sleep well?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="SleepWellMost" name="SleepWell" value="Most of the times" required>
+                        <input type="radio" id="SleepWellMost" name="SleepWell" value="Most of the times" required class="green-option">
                         <label for="SleepWellMost">Most of the times</label>
-                        <input type="radio" id="SleepWellSometimes" name="SleepWell" value="Sometimes">
+                        <input type="radio" id="SleepWellSometimes" name="SleepWell" value="Sometimes" class="orange-option">
                         <label for="SleepWellSometimes">Sometimes</label>
-                        <input type="radio" id="SleepWellNot" name="SleepWell" value="Not at all">
+                        <input type="radio" id="SleepWellNot" name="SleepWell" value="Not at all" class="red-option">
                         <label for="SleepWellNot">Not at all</label>
                     </div>
                 </div>
@@ -623,11 +670,11 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Do you feel bad and guilty?</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="radio" id="FeelBadAndGuiltyMost" name="FeelBadAndGuilty" value="Most of the times" required>
+                        <input type="radio" id="FeelBadAndGuiltyMost" name="FeelBadAndGuilty" value="Most of the times" required class="red-option">
                         <label for="FeelBadAndGuiltyMost">Most of the times</label>
-                        <input type="radio" id="FeelBadAndGuiltySometimes" name="FeelBadAndGuilty" value="Sometimes">
+                        <input type="radio" id="FeelBadAndGuiltySometimes" name="FeelBadAndGuilty" value="Sometimes" class="orange-option">
                         <label for="FeelBadAndGuiltySometimes">Sometimes</label>
-                        <input type="radio" id="FeelBadAndGuiltyNot" name="FeelBadAndGuilty" value="Not at all">
+                        <input type="radio" id="FeelBadAndGuiltyNot" name="FeelBadAndGuilty" value="Not at all" class="green-option">
                         <label for="FeelBadAndGuiltyNot">Not at all</label>
                     </div>
                 </div>
@@ -664,7 +711,6 @@
             <div id="llmAdviceBox" class="llm-advice-box mb-4 hidden">
                 <h3>AI-Generated Supportive Advice:</h3>
                 <p id="llmAdviceContent"></p>
-                <p class="disclaimer">Disclaimer: This advice is AI-generated general guidance and not a medical diagnosis or substitute for professional help. If you are experiencing symptoms of depression, please consult a healthcare professional.</p>
             </div>
 
             <!-- DeepSeek AI Journal Prompt Button -->
@@ -678,7 +724,6 @@
             <div id="journalPromptBox" class="llm-advice-box mb-4 hidden">
                 <h3>AI-Generated Journal Prompt:</h3>
                 <p id="journalPromptContent"></p>
-                <p class="disclaimer">Disclaimer: This prompt is AI-generated for self-reflection and is not a substitute for professional guidance. If you are struggling, please seek support from a qualified professional.</p>
             </div>
 
             <!-- DeepSeek AI Positive Affirmation Button -->
@@ -692,7 +737,6 @@
             <div id="positiveAffirmationBox" class="llm-advice-box mb-4 hidden">
                 <h3>AI-Generated Positive Affirmation:</h3>
                 <p id="positiveAffirmationContent"></p>
-                <p class="disclaimer">Disclaimer: This affirmation is AI-generated for general encouragement and is not a substitute for professional mental health support.</p>
             </div>
 
 
@@ -746,8 +790,15 @@
         </div>
     </div>
 
+    <!-- Consolidated Global Disclaimer Section -->
+    <div id="globalDisclaimer" class="hidden">
+        <p><strong>Disclaimer:</strong> This application provides AI-generated general guidance and is not a medical diagnosis or substitute for professional help.</p>
+        <p>If you are experiencing symptoms of depression, anxiety, or any mental health concerns, please consult a qualified healthcare professional or a mental health specialist.</p>
+        <p>If you are in distress or experiencing a crisis, please seek immediate help from a crisis hotline or emergency services.</p>
+    </div>
 
-    <script>
+
+    <script type="module">
         // Mapping for display names (moved to global scope for accessibility)
         const displayNames = {
             Age: 'Age', Gender: 'Gender', Profession: 'Profession', MaritalStatus: 'Marital Status',
@@ -935,7 +986,24 @@
         // --- End of Simulated Decision Tree Logic ---
 
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Mapping for display names (moved to global scope for accessibility)
+            const displayNames = {
+                Age: 'Age', Gender: 'Gender', Profession: 'Profession', MaritalStatus: 'Marital Status',
+                SatisfiedLife: 'Are you satisfied with your life?', DroppedActivities: 'Have you dropped activities you used to enjoy?',
+                FeelLifeEmpty: 'Do you feel your life is empty?', Bored: 'Do you often feel bored?',
+                FeelHelpless: 'Do you feel helpless?', AfraidBadHappening: 'Are you afraid that something bad will happen to you?',
+                HopefulAboutFuture: 'Are you hopeful about the future?', SpendTimeHappily: 'Do you spend time happily?',
+                FeelEnergy: 'Do you feel full of energy?', PreferStayHome: 'Do you prefer to stay home rather than going out and doing new things?',
+                MemoryLoss: 'Do you have problems with memory loss?', ConsiderWorthless: 'Do you consider yourself worthless?',
+                CryMostOfTheTime: 'Do you cry most of the time?', FeelingReduceAppetiteAndLosingWeight: 'Are you feeling reduced appetite and losing weight?',
+                SituationHopeless: 'Do you feel your situation is hopeless?', PeopleBetterThanYou: 'Do you feel others are better than you?',
+                OthersWouldBetterYouDied: 'Do you feel others would be better off if you died?',
+                AvoidingSocialGatherings: 'Are you avoiding social gatherings?',
+                SleepWell: 'Do you sleep well?',
+                FeelBadAndGuilty: 'Do you feel bad and guilty?'
+            };
+
             // Get references to main containers
             const homepage = document.getElementById('homepage');
             const surveyContainer = document.getElementById('surveyContainer');
@@ -953,7 +1021,6 @@
             const validationMessage = document.getElementById('validationMessage');
             const resetSurveyButton = document.getElementById('resetSurvey');
             
-            // Renamed Gemini advice button to DeepSeek advice button
             const getDeepSeekAdviceButton = document.getElementById('getDeepSeekAdvice');
             const deepSeekAdviceButtonText = document.getElementById('deepSeekAdviceButtonText');
             const deepSeekAdviceSpinner = document.getElementById('deepSeekAdviceSpinner');
@@ -999,6 +1066,7 @@
 
 
             // Analysis and results elements (now always visible)
+            const decisionOutputBox = document.getElementById('decisionOutputBox');
             const detailedAnalysisBox = document.getElementById('detailedAnalysisBox');
             const analysisReasoning = document.getElementById('analysisReasoning');
             const positiveAspectsList = document.getElementById('positiveAspectsList');
@@ -1009,6 +1077,9 @@
             let lastAreasForGrowth = [];
             let lastPositiveAspects = [];
 
+            // Global disclaimer element
+            const globalDisclaimer = document.getElementById('globalDisclaimer');
+
 
             // --- Navigation Functions ---
             function showPage(pageId) {
@@ -1017,11 +1088,12 @@
                 homepage.classList.add('hidden');
                 surveyContainer.classList.add('hidden');
                 aiTherapistModal.classList.remove('active'); // Ensure modal is hidden when navigating pages
-
+                globalDisclaimer.classList.add('hidden'); // Hide global disclaimer by default
 
                 // Show the requested page
                 if (pageId === 'homepage') {
                     homepage.classList.remove('hidden');
+                    globalDisclaimer.classList.remove('hidden'); // Show disclaimer on homepage
                     console.log('Homepage visibility set to visible');
                 } else if (pageId === 'survey') {
                     surveyContainer.classList.remove('hidden');
@@ -1055,6 +1127,10 @@
                 document.querySelectorAll('select').forEach(select => select.classList.remove('border-red-500'));
                 // Reset any temporary red borders on radio button labels
                 document.querySelectorAll('input[type="radio"] + label').forEach(label => label.style.borderColor = '');
+                // Remove all color classes from radio buttons
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.classList.remove('green-option', 'orange-option', 'red-option');
+                });
             }
 
             // --- Event Listeners for Navigation ---
@@ -1070,7 +1146,11 @@
             // --- AI Therapist Modal Functions ---
             function showAITherapistModal() {
                 aiTherapistModal.classList.add('active');
-                chatInput.focus(); // Focus on input when modal opens
+                // Reset chat history and display initial message
+                chatMessagesDiv.innerHTML = '<div class="message-bubble ai">Hello! I\'m here to listen and offer supportive responses. How are you feeling today?</div>';
+                chatHistory = [{ role: "assistant", content: "Hello! I'm here to listen and offer supportive responses. How are you feeling today?" }];
+                chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+                chatInput.focus();
             }
 
             function hideAITherapistModal() {
@@ -1091,6 +1171,50 @@
                     hideAITherapistModal();
                 }
             });
+
+            // --- Apply color coding on radio button change ---
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    const name = event.target.name;
+                    const value = event.target.value;
+
+                    // Remove existing color classes from all radios in the group
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(siblingRadio => {
+                        siblingRadio.classList.remove('green-option', 'orange-option', 'red-option');
+                    });
+
+                    // Add the appropriate color class to the selected radio input
+                    const questionName = event.target.name;
+                    const colorMap = {
+                        SatisfiedLife: { Yes: 'green', No: 'red' },
+                        DroppedActivities: { Yes: 'red', No: 'green' },
+                        FeelLifeEmpty: { Yes: 'red', No: 'green' },
+                        Bored: { Yes: 'red', No: 'green' },
+                        FeelHelpless: { Yes: 'red', No: 'green' },
+                        AfraidBadHappening: { Yes: 'red', No: 'green' },
+                        HopefulAboutFuture: { Yes: 'green', No: 'red' },
+                        SpendTimeHappily: { Yes: 'green', No: 'red' },
+                        FeelEnergy: { Yes: 'green', No: 'red' },
+                        PreferStayHome: { Yes: 'red', No: 'green' },
+                        MemoryLoss: { Yes: 'red', No: 'green' },
+                        ConsiderWorthless: { Yes: 'red', No: 'green' },
+                        CryMostOfTheTime: { Yes: 'red', No: 'green' },
+                        FeelingReduceAppetiteAndLosingWeight: { Yes: 'red', No: 'green' },
+                        SituationHopeless: { Yes: 'red', No: 'green' },
+                        PeopleBetterThanYou: { Yes: 'red', No: 'green' },
+                        OthersWouldBetterYouDied: { Yes: 'red', No: 'green' },
+                        AvoidingSocialGatherings: { 'Not at all': 'green', 'Sometimes': 'orange', 'Most of the times': 'red' },
+                        SleepWell: { 'Most of the times': 'green', 'Sometimes': 'orange', 'Not at all': 'red' },
+                        FeelBadAndGuilty: { 'Not at all': 'green', 'Sometimes': 'orange', 'Most of the times': 'red' }
+                    };
+
+                    const color = colorMap[questionName] ? colorMap[questionName][value] : null;
+                    if (color) {
+                        event.target.classList.add(`${color}-option`);
+                    }
+                });
+            });
+
 
             // --- Chat Functionality (within modal) ---
             async function sendMessage() {
@@ -1131,7 +1255,7 @@
                     const result = await response.json();
                     console.log('DeepSeek API chat response:', result); // Debugging log
 
-                    if (result.choices && result.choices.length > 0 &&
+                    if (response.ok && result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
                         const aiResponse = result.choices[0].message.content;
                         // Update loading message with actual AI response
@@ -1140,9 +1264,16 @@
                         // Add AI response to chat history (DeepSeek format)
                         chatHistory.push({ role: "assistant", content: aiResponse });
                     } else {
-                        loadingMessageElement.textContent = "Sorry, I couldn't generate a response. Please try again.";
+                        // Handle API errors more specifically
+                        let errorMessage = "Sorry, I couldn't generate a response. Please try again.";
+                        if (result.error && result.error.message) {
+                            errorMessage = `AI Error: ${result.error.message}`;
+                        } else if (!response.ok) {
+                            errorMessage = `API request failed with status: ${response.status} ${response.statusText}`;
+                        }
+                        loadingMessageElement.textContent = errorMessage;
                         loadingMessageElement.classList.remove('loading');
-                        console.error("DeepSeek API response structure unexpected for chat:", result);
+                        console.error("DeepSeek API response issue for chat:", result);
                     }
                 } catch (error) {
                     loadingMessageElement.textContent = "An error occurred. Please try again later.";
@@ -1157,7 +1288,7 @@
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message-bubble'); // 'message-bubble' is always a base class
 
-                // FIX: Split the sender string by spaces and add each part as a separate class
+                // Split the sender string by spaces and add each part as a separate class
                 sender.split(' ').forEach(cls => {
                     if (cls) { // Ensure no empty strings are added as classes
                         messageElement.classList.add(cls);
@@ -1179,7 +1310,7 @@
 
 
             // --- Survey Form Logic ---
-            form.addEventListener('submit', (event) => {
+            form.addEventListener('submit', async (event) => { // Added async here
                 event.preventDefault();
                 console.log('Form submitted.'); // Debugging log
 
@@ -1265,7 +1396,7 @@
 
                 form.classList.add('hidden');
                 surveyResultsDiv.classList.remove('hidden');
-                console.log('Displaying survey results section.'); // Debugging log
+                console.log('Displaying survey results section.');
 
 
                 // Scroll to the top of the results section immediately after showing it
@@ -1282,7 +1413,7 @@
                 // Display decision tree prediction at the top
                 decisionOutputBox.textContent = `Decision Tree Prediction: ${lastPredictionResult}`;
                 decisionOutputBox.classList.remove('hidden');
-                console.log('Decision output box unhidden and content set.'); // Debugging log
+                console.log('Decision output box unhidden and content set.');
 
 
                 // Apply highlight class to analysis box
@@ -1379,7 +1510,6 @@
                     }).join('\n')}
 
                     Based on this, provide general, supportive advice and common coping strategies.
-                    Emphasize that this is AI-generated general guidance and not a medical diagnosis or substitute for professional help.
                     Keep the advice concise, positive, and actionable.`;
 
                     const messages = [{ role: "user", content: prompt }];
@@ -1395,7 +1525,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}` // DeepSeek API Key in Authorization header
                         },
                         body: JSON.stringify(payload)
                     });
@@ -1403,15 +1533,21 @@
                     const result = await response.json();
                     console.log('DeepSeek API advice response:', result); // Debugging log
 
-                    if (result.choices && result.choices.length > 0 &&
+                    if (response.ok && result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
                         const text = result.choices[0].message.content;
                         llmAdviceContent.textContent = text;
                         llmAdviceBox.classList.remove('hidden');
                     } else {
-                        llmAdviceContent.textContent = "Sorry, I couldn't generate advice at this time. Please try again.";
+                        let errorMessage = "Sorry, I couldn't generate advice at this time. Please try again.";
+                        if (result.error && result.error.message) {
+                            errorMessage = `AI Error: ${result.error.message}`;
+                        } else if (!response.ok) {
+                            errorMessage = `API request failed with status: ${response.status} ${response.statusText}`;
+                        }
+                        llmAdviceContent.textContent = errorMessage;
                         llmAdviceBox.classList.remove('hidden');
-                        console.error("DeepSeek API response structure unexpected for advice:", result);
+                        console.error("DeepSeek API response issue for advice:", result);
                     }
                 } catch (error) {
                     llmAdviceContent.textContent = "An error occurred while fetching advice. Please try again later.";
@@ -1459,15 +1595,21 @@
                     const result = await response.json();
                     console.log('DeepSeek API journal prompt response:', result); // Debugging log
 
-                    if (result.choices && result.choices.length > 0 &&
+                    if (response.ok && result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
                         const text = result.choices[0].message.content;
                         journalPromptContent.textContent = text;
                         journalPromptBox.classList.remove('hidden');
                     } else {
-                        journalPromptContent.textContent = "Sorry, I couldn't generate a journal prompt at this time. Please try again.";
+                        let errorMessage = "Sorry, I couldn't generate a journal prompt at this time. Please try again.";
+                        if (result.error && result.error.message) {
+                            errorMessage = `AI Error: ${result.error.message}`;
+                        } else if (!response.ok) {
+                            errorMessage = `API request failed with status: ${response.status} ${response.statusText}`;
+                        }
+                        journalPromptContent.textContent = errorMessage;
                         journalPromptBox.classList.remove('hidden');
-                        console.error("DeepSeek API response structure unexpected for journal prompt:", result);
+                        console.error("DeepSeek API response issue for journal prompt:", result);
                     }
                 } catch (error) {
                     journalPromptContent.textContent = "An error occurred while fetching the journal prompt. Please try again later.";
@@ -1515,15 +1657,21 @@
                     const result = await response.json();
                     console.log('DeepSeek API affirmation response:', result); // Debugging log
 
-                    if (result.choices && result.choices.length > 0 &&
+                    if (response.ok && result.choices && result.choices.length > 0 &&
                         result.choices[0].message && result.choices[0].message.content) {
                         const text = result.choices[0].message.content;
                         positiveAffirmationContent.textContent = text;
                         positiveAffirmationBox.classList.remove('hidden');
                     } else {
-                        positiveAffirmationContent.textContent = "Sorry, I couldn't generate a positive affirmation at this time. Please try again.";
+                        let errorMessage = "Sorry, I couldn't generate a positive affirmation at this time. Please try again.";
+                        if (result.error && result.error.message) {
+                            errorMessage = `AI Error: ${result.error.message}`;
+                        } else if (!response.ok) {
+                            errorMessage = `API request failed with status: ${response.status} ${response.statusText}`;
+                        }
+                        positiveAffirmationContent.textContent = errorMessage;
                         positiveAffirmationBox.classList.remove('hidden');
-                        console.error("DeepSeek API response structure unexpected for affirmation:", result);
+                        console.error("DeepSeek API response issue for affirmation:", result);
                     }
                 } catch (error) {
                     positiveAffirmationContent.textContent = "An error occurred while fetching the positive affirmation. Please try again later.";
@@ -1567,18 +1715,48 @@
                 const randomMaritalStatus = maritalStatuses[Math.floor(Math.random() * maritalStatuses.length)];
                 document.getElementById('MaritalStatus').value = randomMaritalStatus;
 
+                // Define a color map for random fill to apply classes
+                const colorMap = {
+                    SatisfiedLife: { Yes: 'green', No: 'red' },
+                    DroppedActivities: { Yes: 'red', No: 'green' },
+                    FeelLifeEmpty: { Yes: 'red', No: 'green' },
+                    Bored: { Yes: 'red', No: 'green' },
+                    FeelHelpless: { Yes: 'red', No: 'green' },
+                    AfraidBadHappening: { Yes: 'red', No: 'green' },
+                    HopefulAboutFuture: { Yes: 'green', No: 'red' },
+                    SpendTimeHappily: { Yes: 'green', No: 'red' },
+                    FeelEnergy: { Yes: 'green', No: 'red' },
+                    PreferStayHome: { Yes: 'red', No: 'green' },
+                    MemoryLoss: { Yes: 'red', No: 'green' },
+                    ConsiderWorthless: { Yes: 'red', No: 'green' },
+                    CryMostOfTheTime: { Yes: 'red', No: 'green' },
+                    FeelingReduceAppetiteAndLosingWeight: { Yes: 'red', No: 'green' },
+                    SituationHopeless: { Yes: 'red', No: 'green' },
+                    PeopleBetterThanYou: { Yes: 'red', No: 'green' },
+                    OthersWouldBetterYouDied: { Yes: 'red', No: 'green' },
+                    AvoidingSocialGatherings: { 'Not at all': 'green', 'Sometimes': 'orange', 'Most of the times': 'red' },
+                    SleepWell: { 'Most of the times': 'green', 'Sometimes': 'orange', 'Not at all': 'red' },
+                    FeelBadAndGuilty: { 'Not at all': 'green', 'Sometimes': 'orange', 'Most of the times': 'red' }
+                };
+
                 // Fill Yes/No questions randomly
                 const yesNoQuestions = [
                     'SatisfiedLife', 'DroppedActivities', 'FeelLifeEmpty', 'Bored', 'FeelHelpless',
                     'AfraidBadHappening', 'HopefulAboutFuture', 'SpendTimeHappily', 'FeelEnergy',
-                    'PreferStayHome', 'MemoryLoss', 'ConsiderWorthless', 'CryMostOfTheTime',
-                    'FeelingReduceAppetiteAndLosingWeight', 'SituationHopeless', 'PeopleBetterThanYou',
-                    'OthersWouldBetterYouDied'
+                    'PreferStayHome', 'MemoryLoss', 'ConsiderWorthless',
+                    'CryMostOfTheTime', 'FeelingReduceAppetiteAndLosingWeight', 'SituationHopeless',
+                    'PeopleBetterThanYou', 'OthersWouldBetterYouDied'
                 ];
                 yesNoQuestions.forEach(qName => {
                     const options = ['Yes', 'No'];
                     const randomOption = options[Math.floor(Math.random() * options.length)];
-                    document.querySelector(`input[name="${qName}"][value="${randomOption}"]`).checked = true;
+                    const radioElement = document.querySelector(`input[name="${qName}"][value="${randomOption}"]`);
+                    radioElement.checked = true;
+                    // Apply color class for random fill
+                    const color = colorMap[qName] ? colorMap[qName][randomOption] : null;
+                    if (color) {
+                        radioElement.classList.add(`${color}-option`);
+                    }
                 });
 
                 // Fill Graded questions randomly
@@ -1588,7 +1766,13 @@
                 const gradedOptions = ['Most of the times', 'Sometimes', 'Not at all'];
                 gradedQuestions.forEach(qName => {
                     const randomOption = gradedOptions[Math.floor(Math.random() * gradedOptions.length)];
-                    document.querySelector(`input[name="${qName}"][value="${randomOption}"]`).checked = true;
+                    const radioElement = document.querySelector(`input[name="${qName}"][value="${randomOption}"]`);
+                    radioElement.checked = true;
+                    // Apply color class for random fill
+                    const color = colorMap[qName] ? colorMap[qName][randomOption] : null;
+                    if (color) {
+                        radioElement.classList.add(`${color}-option`);
+                    }
                 });
 
                 // Automatically submit the form after filling
@@ -1602,4 +1786,5 @@
     </script>
 </body>
 </html>
+
 
